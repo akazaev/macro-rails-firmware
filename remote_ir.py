@@ -1,6 +1,11 @@
-import OPi.GPIO as GPIO
+try:
+    import RPi.GPIO as GPIO
+except ImportError:
+    import OPi.GPIO as GPIO
+    GPIO.setboard(GPIO.ZERO)
+
 from time import sleep
-GPIO.setboard(GPIO.ZERO)
+
 GPIO.setmode(GPIO.BOARD)
 
 pin = 26
