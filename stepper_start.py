@@ -34,7 +34,7 @@ try:
                     GPIO.output(control_pins[pin], halfstep_seq[halfstep][pin])
                 sleep(0.002)
             value = adc.read_adc(0, gain=GAIN)
-            if value <= 3500:
+            if value <= 4000:
                 stop = True
                 break
         if stop:
