@@ -32,9 +32,9 @@ seq = [
 abs_position = 0
 finish_position = 512*4
 position = 0
-step = 41
+step = 41  # 39-40
 
-print abs_position
+print(abs_position)
 
 try:
     while abs_position < finish_position:
@@ -49,8 +49,8 @@ try:
                     position = 3
                 if position > 3:
                     position = 0
-        print abs_position
-        sleep(1)
+        print(abs_position)
+        sleep(2)
         take_shot(ir_pin)
         sleep(0.063)
         take_shot(ir_pin)  # double command to ensure command was received
@@ -58,7 +58,7 @@ try:
 except KeyboardInterrupt:
     pass
 except Exception as err:
-    print err
+    print(err)
 
 
 for pin in control_pins:

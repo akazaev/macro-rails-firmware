@@ -41,7 +41,7 @@ try:
 except KeyboardInterrupt:
     pass
 except Exception as err:
-    print err
+    print(err)
 
 
 for pin in control_pins:

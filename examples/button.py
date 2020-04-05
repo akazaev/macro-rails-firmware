@@ -47,7 +47,7 @@ def button_callback1(channel):
     except KeyboardInterrupt:
         pass
     except Exception as err:
-        print err
+        print(err)
 
     for pin in control_pins:
         GPIO.output(pin, 0)
@@ -63,5 +63,5 @@ GPIO.add_event_detect(38, GPIO.FALLING, callback=button_callback1)
 
 
 while True:
-    print 'step'
+    print('step')
     sleep(1)

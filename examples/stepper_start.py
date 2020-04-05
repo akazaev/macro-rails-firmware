@@ -27,7 +27,7 @@ stop = False
 value = 0
 try:
     while True:
-        print value
+        print(value)
         for i in range(512):
             for halfstep in range(len(halfstep_seq)):
                 for pin in range(4):
@@ -42,7 +42,7 @@ try:
 except KeyboardInterrupt:
     pass
 except Exception as err:
-    print err
+    print(err)
 
 
 

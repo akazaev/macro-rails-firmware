@@ -38,7 +38,7 @@ def callback(pin):
         step = 1
     if GPIO.input(backward_pin):
         step = -1
-    print abs_position
+    print(abs_position)
 
 
 def button_callback(channel):
@@ -58,7 +58,7 @@ def button_callback(channel):
     except KeyboardInterrupt:
         pass
     except Exception as err:
-        print err
+        print(err)
 
     for pin in control_pins:
         GPIO.output(pin, 0)
@@ -81,7 +81,7 @@ abs_position = 0
 position = 0
 run = False
 
-print abs_position
+print(abs_position)
 
 try:
     while True:
@@ -102,7 +102,7 @@ try:
 except KeyboardInterrupt:
     pass
 except Exception as err:
-    print err
+    print(err)
 
 
 for pin in control_pins:
