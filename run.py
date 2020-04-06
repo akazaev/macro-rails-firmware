@@ -20,7 +20,7 @@ GPIO.setmode(GPIO.BOARD)
 
 class PinsEnum:
     DRIVER = (31, 33, 35, 37)
-    IR = 29
+    IR = 21
 
     FORWARD_BTN = 36
     RESET_BTN = 32
@@ -80,12 +80,18 @@ def step_callback(pin):
     if GPIO.input(PinsEnum.A_BTN):
         STEP += 0.05
     if GPIO.input(PinsEnum.C_BTN):
-        STEP -= 0.05
+        STEP = max(0.05, STEP - 0.05)
 
 
 def run():
     global POSITION, ABS_POSITION, PROGRESS
     direction = 1
+
+    distance = round(1.25 * (ABS_POSITION / (8 * 512)), 2)
+    distance = '>D={}'.format(distance)
+    step = '>S={}'.format(round(STEP, 2))
+    lcd_print(step, distance)
+
     try:
         while PROGRESS:
             for i in range(int(512*8*STEP/1.25)):
@@ -99,11 +105,8 @@ def run():
                 if POSITION > len(SEQUENCE) - 1:
                     POSITION = 0
 
-            sleep(2)
-            take_shot(PinsEnum.IR)
-            sleep(0.063)
-            #take_shot(PinsEnum.IR)  # double command to ensure command was received
-            sleep(1)
+            for pin in range(4):
+                GPIO.output(PinsEnum.DRIVER[pin], 0)
 
             distance = round(1.25 * (ABS_POSITION / (8 * 512)), 2)
             distance = '>D={}'.format(distance)
@@ -114,6 +117,13 @@ def run():
                 lcd_print('Stop...', '')
                 sleep(4)
                 PROGRESS = False
+                break
+
+            sleep(2)
+            take_shot(PinsEnum.IR)
+            sleep(0.063)
+            take_shot(PinsEnum.IR)  # double command to ensure command was received
+            sleep(1)
     except KeyboardInterrupt:
         pass
     except Exception as err:
@@ -184,7 +194,7 @@ try:
             elif GPIO.input(PinsEnum.C_BTN):
                 if btn_pressed:
                     if time() - btn_pressed > 1:
-                        STEP -= 0.05
+                        STEP = max(0.05, STEP - 0.05)
                 else:
                     btn_pressed = time()
             else:
