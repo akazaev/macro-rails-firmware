@@ -11,6 +11,7 @@ except ImportError:
 
 from time import sleep, time
 
+from libs.ir import take_shot
 from helpers import lcd_print
 
 GPIO.setwarnings(False)
@@ -97,6 +98,12 @@ def run():
                     POSITION = len(SEQUENCE) - 1
                 if POSITION > len(SEQUENCE) - 1:
                     POSITION = 0
+
+            sleep(2)
+            take_shot(PinsEnum.IR)
+            sleep(0.063)
+            #take_shot(PinsEnum.IR)  # double command to ensure command was received
+            sleep(1)
 
             distance = round(1.25 * (ABS_POSITION / (8 * 512)), 2)
             distance = '>D={}'.format(distance)
