@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 try:
     import RPi.GPIO as GPIO
 except ImportError:
