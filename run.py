@@ -72,7 +72,9 @@ def reset_callback(pin):
 
 
 def restart_callback(pin):
-    os.execl('./run.py', *sys.argv)
+    lcd_print('Restart...', '')
+    os.execl(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                          'run.py'), *sys.argv)
 
 
 def step_callback(pin):
