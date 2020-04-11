@@ -21,6 +21,7 @@ GPIO.setmode(GPIO.BOARD)
 class PinsEnum:
     DRIVER = (31, 33, 35, 37)
     IR = 21
+    SHOT = 19
 
     FORWARD_BTN = 36
     RESET_BTN = 32
@@ -39,6 +40,7 @@ GPIO.setup(PinsEnum.FORWARD_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.RESET_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.BACKWARD_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.RESTART_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(PinsEnum.SHOT, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.A_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.B_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.C_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -83,6 +85,10 @@ def step_callback(pin):
         STEP += 0.05
     if GPIO.input(PinsEnum.C_BTN):
         STEP = max(0.05, STEP - 0.05)
+
+
+def shot_callback(pin):
+    take_shot(PinsEnum.IR)
 
 
 def run():
@@ -157,6 +163,10 @@ GPIO.add_event_detect(PinsEnum.RESET_BTN, GPIO.RISING,
 
 GPIO.add_event_detect(PinsEnum.RESTART_BTN, GPIO.RISING,
                       callback=restart_callback,
+                      bouncetime=400)
+
+GPIO.add_event_detect(PinsEnum.SHOT, GPIO.RISING,
+                      callback=shot_callback,
                       bouncetime=400)
 
 GPIO.add_event_detect(PinsEnum.A_BTN, GPIO.RISING,
