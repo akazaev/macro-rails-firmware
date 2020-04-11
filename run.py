@@ -123,8 +123,8 @@ def run():
 
             sleep(2)
             take_shot(PinsEnum.IR)
-            sleep(0.063)
-            take_shot(PinsEnum.IR)  # double command to ensure command was received
+            sleep(0.0632)
+            take_shot(PinsEnum.IR)  # double command to ensure it was received
             sleep(1)
     except KeyboardInterrupt:
         pass
