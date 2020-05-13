@@ -12,7 +12,7 @@ except ImportError:
 from time import sleep, time
 
 from libs.ir import take_shot
-from helpers import lcd_print, PinsEnum, SEQUENCE
+from helpers import lcd_print, PinsEnum, SEQUENCE, SCREW_PITCH
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
@@ -63,11 +63,11 @@ def shot_callback(pin):
 
 
 def calc_distance(position):
-    return round(1.25 * (position / (8 * 512)), 2)
+    return round(SCREW_PITCH * (position / (8 * 512)), 2)
 
 
 def run():
-    global POSITION, ABS_POSITION, PROGRESS
+    global POSITION, ABS_POSITION, PROGRESS, SHOTS
     direction = 1
 
     distance = calc_distance(ABS_POSITION)
@@ -77,7 +77,7 @@ def run():
 
     try:
         while PROGRESS:
-            for i in range(round(512 * 8 * STEP / 1.25)):
+            for i in range(round(512 * 8 * STEP / SCREW_PITCH)):
                 for pin in range(4):
                     GPIO.output(PinsEnum.DRIVER[pin], SEQUENCE[POSITION][pin])
                 sleep(0.003)
@@ -92,7 +92,7 @@ def run():
                 GPIO.output(PinsEnum.DRIVER[pin], 0)
 
             distance = calc_distance(ABS_POSITION)
-            distance = '=>D={}'.format(distance)
+            distance = '=>D={},S={}'.format(distance, SHOTS + 1)
             step = 'Step={}mm'.format(round(STEP, 2))
             lcd_print(step, distance)
 
@@ -107,6 +107,7 @@ def run():
             sleep(0.0632)
             take_shot(PinsEnum.IR)  # double command to ensure it was received
             sleep(1)
+            SHOTS += 1
     except KeyboardInterrupt:
         pass
     except Exception as err:
@@ -118,6 +119,7 @@ def start_callback(pin):
     if not PROGRESS:
         PROGRESS = True
         ABS_POSITION = 0
+        SHOTS = 0
         lcd_print('Start...', '')
         sleep(4)
         run()
@@ -156,6 +158,7 @@ ABS_POSITION = 0
 POSITION = 0
 STEP = 0.1
 PROGRESS = False
+SHOTS = 0
 
 btn_pressed = None
 

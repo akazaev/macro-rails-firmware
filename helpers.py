@@ -1,6 +1,9 @@
 from libs.lcd import LCD
 
 
+SCREW_PITCH = 1.25
+
+
 class PinsEnum:
     DRIVER = (31, 33, 35, 37)
     IR = 21
@@ -38,6 +41,10 @@ def lcd_print(row1, row2):
             print(err)
     row1 = str(row1)
     row2 = str(row2)
+    if len(row1) > 16:
+        row1 = row1[:15] + '_'
+    if len(row2) > 16:
+        row2 = row2[:15] + '_'
     try:
         _lcd.lcd_display_string(row1 + (16 - len(row1))*' ', 1)
         _lcd.lcd_display_string(row2 + (16 - len(row2))*' ', 2)
