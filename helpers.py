@@ -1,5 +1,31 @@
 from libs.lcd import LCD
 
+
+class PinsEnum:
+    DRIVER = (31, 33, 35, 37)
+    IR = 21
+    SHOT = 19
+    FORWARD_BTN = 36
+    RESET_BTN = 32
+    BACKWARD_BTN = 38
+    RESTART_BTN = 29
+    A_BTN = 22
+    B_BTN = 24
+    C_BTN = 26
+
+
+SEQUENCE = [
+    [1, 0, 0, 0],
+    [1, 1, 0, 0],
+    [0, 1, 0, 0],
+    [0, 1, 1, 0],
+    [0, 0, 1, 0],
+    [0, 0, 1, 1],
+    [0, 0, 0, 1],
+    [1, 0, 0, 1],
+]
+
+
 _lcd = None
 
 
