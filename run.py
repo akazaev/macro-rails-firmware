@@ -12,21 +12,27 @@ except ImportError:
 from time import sleep, time
 
 from libs.ir import take_shot
-from helpers import lcd_print, PinsEnum, SEQUENCE, SCREW_PITCH
+from helpers import lcd_print, PinsEnum, SEQUENCE, SCREW_PITCH, calc_distance
+
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 
-
 GPIO.setup(PinsEnum.IR, GPIO.OUT)
+GPIO.setup(PinsEnum.RESTART_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(PinsEnum.SHOT, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
 GPIO.setup(PinsEnum.FORWARD_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.RESET_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.BACKWARD_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(PinsEnum.RESTART_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(PinsEnum.SHOT, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(PinsEnum.A_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(PinsEnum.B_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(PinsEnum.C_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+GPIO.setup(PinsEnum.INC_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(PinsEnum.START_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(PinsEnum.DEC_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+for pin in PinsEnum.DRIVER:
+    GPIO.setup(pin, GPIO.OUT)
+    GPIO.output(pin, 0)
 
 
 def manual_callback(pin):
@@ -39,8 +45,8 @@ def manual_callback(pin):
 
 
 def reset_callback(pin):
-    global ABS_POSITION, STEP
-    ABS_POSITION = 0
+    global ABS_POSITION, STEP, SHOTS
+    ABS_POSITION = SHOTS = 0
     STEP = 0.1
 
 
@@ -52,9 +58,9 @@ def restart_callback(pin):
 
 def step_callback(pin):
     global STEP
-    if GPIO.input(PinsEnum.A_BTN):
+    if GPIO.input(PinsEnum.INC_BTN):
         STEP += 0.01
-    if GPIO.input(PinsEnum.C_BTN):
+    if GPIO.input(PinsEnum.DEC_BTN):
         STEP = max(0.01, STEP - 0.01)
 
 
@@ -62,18 +68,25 @@ def shot_callback(pin):
     take_shot(PinsEnum.IR)
 
 
-def calc_distance(position):
-    return round(SCREW_PITCH * (position / (8 * 512)), 2)
+def start_callback(pin):
+    global ABS_POSITION, PROGRESS, SHOTS
+    if not PROGRESS:
+        PROGRESS = True
+        ABS_POSITION = SHOTS = 0
+        lcd_print('Start...', '')
+        sleep(4)
+        run()
 
 
 def run():
     global POSITION, ABS_POSITION, PROGRESS, SHOTS
     direction = 1
 
-    distance = calc_distance(ABS_POSITION)
-    distance = '=>D={}'.format(distance)
-    step = 'Step={}mm'.format(round(STEP, 2))
-    lcd_print(step, distance)
+    run_template1 = '=>Step={}mm'
+    run_template2 = '=>D={},S={}'
+
+    lcd_print(run_template1.format(round(STEP, 2)),
+              run_template2.format(calc_distance(ABS_POSITION), SHOTS + 1))
 
     try:
         while PROGRESS:
@@ -92,14 +105,14 @@ def run():
                 GPIO.output(PinsEnum.DRIVER[pin], 0)
 
             distance = calc_distance(ABS_POSITION)
-            distance = '=>D={},S={}'.format(distance, SHOTS + 1)
-            step = 'Step={}mm'.format(round(STEP, 2))
-            lcd_print(step, distance)
+            lcd_print(run_template1.format(round(STEP, 2)),
+                      run_template2.format(distance, SHOTS + 1))
 
-            if GPIO.input(PinsEnum.RESET_BTN):
+            if GPIO.input(PinsEnum.START_BTN):
                 lcd_print('Stop...', '')
                 sleep(4)
                 PROGRESS = False
+                ABS_POSITION = SHOTS = 0
                 break
 
             sleep(2)
@@ -114,51 +127,31 @@ def run():
         print(err)
 
 
-def start_callback(pin):
-    global ABS_POSITION, PROGRESS, STOPPING
-    if not PROGRESS:
-        PROGRESS = True
-        ABS_POSITION = 0
-        SHOTS = 0
-        lcd_print('Start...', '')
-        sleep(4)
-        run()
-
-
-for pin in PinsEnum.DRIVER:
-  GPIO.setup(pin, GPIO.OUT)
-  GPIO.output(pin, 0)
-
-
 GPIO.add_event_detect(PinsEnum.FORWARD_BTN, GPIO.BOTH,
                       callback=manual_callback)
 GPIO.add_event_detect(PinsEnum.BACKWARD_BTN, GPIO.BOTH,
                       callback=manual_callback)
 GPIO.add_event_detect(PinsEnum.RESET_BTN, GPIO.RISING,
-                      callback=reset_callback,
-                      bouncetime=400)
+                      callback=reset_callback, bouncetime=400)
 
 GPIO.add_event_detect(PinsEnum.RESTART_BTN, GPIO.RISING,
-                      callback=restart_callback,
-                      bouncetime=400)
+                      callback=restart_callback, bouncetime=400)
 
 GPIO.add_event_detect(PinsEnum.SHOT, GPIO.RISING,
-                      callback=shot_callback,
-                      bouncetime=400)
+                      callback=shot_callback, bouncetime=400)
 
-GPIO.add_event_detect(PinsEnum.A_BTN, GPIO.RISING,
+GPIO.add_event_detect(PinsEnum.INC_BTN, GPIO.RISING,
                       callback=step_callback, bouncetime=400)
-GPIO.add_event_detect(PinsEnum.B_BTN, GPIO.RISING,
+GPIO.add_event_detect(PinsEnum.START_BTN, GPIO.RISING,
                       callback=start_callback, bouncetime=400)
-GPIO.add_event_detect(PinsEnum.C_BTN, GPIO.RISING,
+GPIO.add_event_detect(PinsEnum.DEC_BTN, GPIO.RISING,
                       callback=step_callback, bouncetime=400)
+
 
 DIRECTION = 0
-ABS_POSITION = 0
-POSITION = 0
+ABS_POSITION = POSITION = SHOTS = 0
 STEP = 0.1
 PROGRESS = False
-SHOTS = 0
 
 btn_pressed = None
 
@@ -175,13 +168,13 @@ try:
             for pin in range(4):
                 GPIO.output(PinsEnum.DRIVER[pin], 0)
 
-            if GPIO.input(PinsEnum.A_BTN):
+            if GPIO.input(PinsEnum.INC_BTN):
                 if btn_pressed:
                     if time() - btn_pressed > 1:
                         STEP += 0.01
                 else:
                     btn_pressed = time()
-            elif GPIO.input(PinsEnum.C_BTN):
+            elif GPIO.input(PinsEnum.DEC_BTN):
                 if btn_pressed:
                     if time() - btn_pressed > 1:
                         STEP = max(0.01, STEP - 0.01)
@@ -191,9 +184,8 @@ try:
                 btn_pressed = None
 
             distance = calc_distance(ABS_POSITION)
-            distance = 'D={},T={}'.format(distance, ABS_POSITION)
-            step = 'Step={}mm'.format(round(STEP, 2))
-            lcd_print(step, distance)
+            lcd_print('Step={}mm'.format(round(STEP, 2)),
+                      'D={},T={}'.format(distance, ABS_POSITION))
         else:
             for pin in range(4):
                 GPIO.output(PinsEnum.DRIVER[pin], SEQUENCE[POSITION][pin])

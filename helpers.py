@@ -12,9 +12,9 @@ class PinsEnum:
     RESET_BTN = 32
     BACKWARD_BTN = 38
     RESTART_BTN = 29
-    A_BTN = 22
-    B_BTN = 24
-    C_BTN = 26
+    INC_BTN = 22
+    START_BTN = 24
+    DEC_BTN = 26
 
 
 SEQUENCE = [
@@ -50,3 +50,7 @@ def lcd_print(row1, row2):
         _lcd.lcd_display_string(row2 + (16 - len(row2))*' ', 2)
     except Exception as err:
         print(err)
+
+
+def calc_distance(position):
+    return round(SCREW_PITCH * (position / (8 * 512)), 2)
