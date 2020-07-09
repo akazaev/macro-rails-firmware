@@ -6,8 +6,8 @@ SCREW_PITCH = 1.25
 
 class PinsEnum:
     DRIVER = (31, 33, 35, 37)
-    IR = 21
-    SHOT = 19
+    SHOT = 21
+    TEST_SHOT_BTN = 19
     FORWARD_BTN = 36
     RESET_BTN = 32
     BACKWARD_BTN = 38

@@ -8,7 +8,12 @@ except ImportError:
 from time import sleep
 
 
-def take_shot(ir_pin):
+def take_shot(pin):
+    # take_wireless_shot(pin)
+    take_wire_shot(pin)
+
+
+def take_wireless_shot(ir_pin):
     """
     Nikon's remote ir controller code
     2.0ms on
@@ -37,3 +42,13 @@ def take_shot(ir_pin):
         sleep(time)
 
     GPIO.output(ir_pin, 0)
+
+
+def take_wire_shot(pin):
+    """
+    Take shot over MC-DC2 port and PRAC34S solid relay
+    """
+
+    GPIO.output(pin, 0)
+    sleep(0.1)
+    GPIO.output(pin, 0)

@@ -11,16 +11,16 @@ except ImportError:
 
 from time import sleep, time
 
-from libs.ir import take_shot
+from libs.control import take_shot
 from helpers import lcd_print, PinsEnum, SEQUENCE, SCREW_PITCH, calc_distance
 
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 
-GPIO.setup(PinsEnum.IR, GPIO.OUT)
+GPIO.setup(PinsEnum.SHOT, GPIO.OUT)
 GPIO.setup(PinsEnum.RESTART_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(PinsEnum.SHOT, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(PinsEnum.TEST_SHOT_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 GPIO.setup(PinsEnum.FORWARD_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.RESET_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -65,7 +65,7 @@ def step_callback(pin):
 
 
 def shot_callback(pin):
-    take_shot(PinsEnum.IR)
+    take_shot(PinsEnum.SHOT)
 
 
 def start_callback(pin):
@@ -116,9 +116,9 @@ def run():
                 break
 
             sleep(2)
-            take_shot(PinsEnum.IR)
+            take_shot(PinsEnum.SHOT)
             sleep(0.0632)
-            take_shot(PinsEnum.IR)  # double command to ensure it was received
+            take_shot(PinsEnum.SHOT)  # double command to ensure it was received
             sleep(1)
             SHOTS += 1
     except KeyboardInterrupt:
@@ -137,7 +137,7 @@ GPIO.add_event_detect(PinsEnum.RESET_BTN, GPIO.RISING,
 GPIO.add_event_detect(PinsEnum.RESTART_BTN, GPIO.RISING,
                       callback=restart_callback, bouncetime=400)
 
-GPIO.add_event_detect(PinsEnum.SHOT, GPIO.RISING,
+GPIO.add_event_detect(PinsEnum.TEST_SHOT_BTN, GPIO.RISING,
                       callback=shot_callback, bouncetime=400)
 
 GPIO.add_event_detect(PinsEnum.INC_BTN, GPIO.RISING,

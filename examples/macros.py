@@ -6,7 +6,7 @@ except ImportError:
 
 from time import sleep
 
-from libs.ir import take_shot
+from libs.control import take_shot
 
 
 GPIO.setwarnings(False)
