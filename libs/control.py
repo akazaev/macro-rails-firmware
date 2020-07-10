@@ -50,5 +50,6 @@ def take_wire_shot(pin):
     """
 
     GPIO.output(pin, 0)
+    GPIO.output(pin, 1)
     sleep(0.1)
     GPIO.output(pin, 0)
