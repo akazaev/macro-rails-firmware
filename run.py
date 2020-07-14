@@ -85,8 +85,11 @@ def run():
     run_template1 = '=>Step={}mm'
     run_template2 = '=>D={},S={}'
 
+    take_shot(PinsEnum.SHOT)
+    SHOTS = 1
+
     lcd_print(run_template1.format(round(STEP, 2)),
-              run_template2.format(calc_distance(ABS_POSITION), SHOTS + 1))
+              run_template2.format(calc_distance(ABS_POSITION), SHOTS))
 
     try:
         while PROGRESS:
@@ -117,8 +120,6 @@ def run():
 
             sleep(2)
             take_shot(PinsEnum.SHOT)
-            sleep(0.0632)
-            take_shot(PinsEnum.SHOT)  # double command to ensure it was received
             sleep(1)
             SHOTS += 1
     except KeyboardInterrupt:
