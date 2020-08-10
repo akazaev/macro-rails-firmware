@@ -86,6 +86,7 @@ def run():
     run_template2 = '=>D={},S={}'
 
     take_shot(PinsEnum.SHOT)
+    sleep(1)
     SHOTS = 1
 
     lcd_print(run_template1.format(round(STEP, 2)),
