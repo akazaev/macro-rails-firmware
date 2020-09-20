@@ -86,7 +86,7 @@ def run():
     run_template2 = '=>D={},S={}'
 
     take_shot(PinsEnum.SHOT)
-    sleep(1)
+    sleep(3)
     SHOTS = 1
 
     lcd_print(run_template1.format(round(STEP, 2)),
@@ -153,6 +153,7 @@ GPIO.add_event_detect(PinsEnum.DEC_BTN, GPIO.RISING,
 DIRECTION = 0
 ABS_POSITION = POSITION = SHOTS = 0
 STEP = 0.1
+MIN_STEP = 0.005
 PROGRESS = False
 
 btn_pressed = None
@@ -173,13 +174,13 @@ try:
             if GPIO.input(PinsEnum.INC_BTN):
                 if btn_pressed:
                     if time() - btn_pressed > 1:
-                        STEP += 0.01
+                        STEP += MIN_STEP
                 else:
                     btn_pressed = time()
             elif GPIO.input(PinsEnum.DEC_BTN):
                 if btn_pressed:
                     if time() - btn_pressed > 1:
-                        STEP = max(0.01, STEP - 0.01)
+                        STEP = max(MIN_STEP, STEP - MIN_STEP)
                 else:
                     btn_pressed = time()
             else:
