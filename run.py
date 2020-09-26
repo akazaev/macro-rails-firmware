@@ -57,11 +57,11 @@ def restart_callback(pin):
 
 
 def step_callback(pin):
-    global STEP
+    global STEP, MIN_STEP
     if GPIO.input(PinsEnum.INC_BTN):
-        STEP += 0.01
+        STEP += MIN_STEP
     if GPIO.input(PinsEnum.DEC_BTN):
-        STEP = max(0.01, STEP - 0.01)
+        STEP = max(MIN_STEP, STEP - MIN_STEP)
 
 
 def shot_callback(pin):
