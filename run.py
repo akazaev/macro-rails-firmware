@@ -89,7 +89,7 @@ def run():
     sleep(3)
     SHOTS = 1
 
-    lcd_print(run_template1.format(round(STEP, 2)),
+    lcd_print(run_template1.format(round(STEP, 3)),
               run_template2.format(calc_distance(ABS_POSITION), SHOTS))
 
     try:
@@ -109,7 +109,7 @@ def run():
                 GPIO.output(PinsEnum.DRIVER[pin], 0)
 
             distance = calc_distance(ABS_POSITION)
-            lcd_print(run_template1.format(round(STEP, 2)),
+            lcd_print(run_template1.format(round(STEP, 3)),
                       run_template2.format(distance, SHOTS + 1))
 
             if GPIO.input(PinsEnum.START_BTN):
@@ -187,7 +187,7 @@ try:
                 btn_pressed = None
 
             distance = calc_distance(ABS_POSITION)
-            lcd_print('Step={}mm'.format(round(STEP, 2)),
+            lcd_print('Step={}mm'.format(round(STEP, 3)),
                       'D={},T={}'.format(distance, ABS_POSITION))
         else:
             for pin in range(4):
