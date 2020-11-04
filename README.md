@@ -16,6 +16,6 @@ Auto-run Script Setup
 
 Pins remain.
 
-Free gpio pins 7, 11, 13.
+Free gpio pins 7, 11.
 
 Reserve gpio pins 8, 10, 12, 23.

@@ -16,6 +16,7 @@ class PinsEnum:
     INC2_BTN = 16
     START_BTN = 24
     STOP_BTN = 32
+    BACK_BTN = 13
     DEC_BTN = 26
     DEC2_BTN = 18
 

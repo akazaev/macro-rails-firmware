@@ -30,6 +30,7 @@ GPIO.setup(PinsEnum.INC_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.INC2_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.START_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.STOP_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(PinsEnum.BACK_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.DEC_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.DEC2_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
@@ -85,6 +86,44 @@ def start_callback(pin):
         run()
 
 
+def back_callback(pin):
+    global PROGRESS
+
+    if not PROGRESS:
+        PROGRESS = True
+        lcd_print('Back...', '')
+        sleep(1)
+        back()
+
+
+def back():
+    global ABS_POSITION, POSITION, PROGRESS
+
+    while True:
+        for pin in range(4):
+            GPIO.output(PinsEnum.DRIVER[pin], SEQUENCE[POSITION][pin])
+        sleep(0.003)
+        POSITION -= 1
+        ABS_POSITION -= 1
+
+        if not ABS_POSITION:
+            lcd_print('Home', '')
+            sleep(2)
+            PROGRESS = False
+            break
+
+        if GPIO.input(PinsEnum.STOP_BTN):
+            lcd_print('Stop...', '')
+            sleep(2)
+            PROGRESS = False
+            break
+
+        if POSITION < 0:
+            POSITION = len(SEQUENCE) - 1
+        if POSITION > len(SEQUENCE) - 1:
+            POSITION = 0
+
+
 def run():
     global POSITION, ABS_POSITION, PROGRESS, SHOTS
     direction = 1
@@ -123,7 +162,7 @@ def run():
                 lcd_print('Stop...', '')
                 sleep(4)
                 PROGRESS = False
-                ABS_POSITION = SHOTS = 0
+                SHOTS = 0
                 break
 
             sleep(2)
@@ -159,7 +198,9 @@ GPIO.add_event_detect(PinsEnum.DEC2_BTN, GPIO.RISING,
                       callback=step_callback, bouncetime=400)
 
 GPIO.add_event_detect(PinsEnum.START_BTN, GPIO.RISING,
-                      callback=start_callback, bouncetime=400)
+                      callback=start_callback, bouncetime=1000)
+GPIO.add_event_detect(PinsEnum.BACK_BTN, GPIO.RISING,
+                      callback=back_callback, bouncetime=1000)
 
 
 DIRECTION = 0
