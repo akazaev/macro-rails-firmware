@@ -57,11 +57,15 @@ def restart_callback(pin):
 
 
 def step_callback(pin):
-    global STEP, MIN_STEP
+    global STEP, MIN_STEP, MIN2_STEP
     if GPIO.input(PinsEnum.INC_BTN):
         STEP += MIN_STEP
     if GPIO.input(PinsEnum.DEC_BTN):
         STEP = max(MIN_STEP, STEP - MIN_STEP)
+    if GPIO.input(PinsEnum.INC2_BTN):
+        STEP += MIN2_STEP
+    if GPIO.input(PinsEnum.DEC2_BTN):
+        STEP = max(MIN2_STEP, STEP - MIN2_STEP)
 
 
 def shot_callback(pin):
@@ -153,7 +157,8 @@ GPIO.add_event_detect(PinsEnum.DEC_BTN, GPIO.RISING,
 DIRECTION = 0
 ABS_POSITION = POSITION = SHOTS = 0
 STEP = 0.1
-MIN_STEP = 0.005
+MIN_STEP = 0.01
+MIN2_STEP = 0.001
 PROGRESS = False
 
 btn_pressed = None
@@ -181,6 +186,18 @@ try:
                 if btn_pressed:
                     if time() - btn_pressed > 1:
                         STEP = max(MIN_STEP, STEP - MIN_STEP)
+                else:
+                    btn_pressed = time()
+            elif GPIO.input(PinsEnum.INC2_BTN):
+                if btn_pressed:
+                    if time() - btn_pressed > 1:
+                        STEP += MIN2_STEP
+                else:
+                    btn_pressed = time()
+            elif GPIO.input(PinsEnum.DEC2_BTN):
+                if btn_pressed:
+                    if time() - btn_pressed > 1:
+                        STEP = max(MIN2_STEP, STEP - MIN2_STEP)
                 else:
                     btn_pressed = time()
             else:

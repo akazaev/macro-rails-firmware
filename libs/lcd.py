@@ -57,7 +57,7 @@ class I2C_device(object):
     # Write a single command
     def write_cmd(self, cmd):
         self.bus.write_byte(self.addr, cmd)
-        #sleep(0.0001)
+        sleep(0.0001) #
 
     # Write a command and argument
     def write_cmd_arg(self, cmd, data):
@@ -101,9 +101,9 @@ class LCD(I2C_device):
     # clocks EN to latch command
     def lcd_strobe(self, data):
         self.write_cmd(data | En | LCD_BACKLIGHT)
-        #sleep(.0005)
+        sleep(.0005) #
         self.write_cmd(((data & ~En) | LCD_BACKLIGHT))
-        #sleep(.0001)
+        sleep(.0001) #
 
     def lcd_write_four_bits(self, data):
         self.write_cmd(data | LCD_BACKLIGHT)

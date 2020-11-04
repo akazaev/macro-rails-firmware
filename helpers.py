@@ -13,8 +13,10 @@ class PinsEnum:
     BACKWARD_BTN = 38
     RESTART_BTN = 29
     INC_BTN = 22
+    INC2_BTN = 16
     START_BTN = 24
     DEC_BTN = 26
+    DEC2_BTN = 18
 
 
 SEQUENCE = [
@@ -46,6 +48,7 @@ def lcd_print(row1, row2):
     if len(row2) > 16:
         row2 = row2[:15] + '_'
     try:
+        _lcd.lcd_clear()
         _lcd.lcd_display_string(row1 + (16 - len(row1))*' ', 1)
         _lcd.lcd_display_string(row2 + (16 - len(row2))*' ', 2)
     except Exception as err:

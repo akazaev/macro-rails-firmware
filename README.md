@@ -12,3 +12,9 @@ Auto-run Script Setup
     sudo /home/pi/macro-stacking-utility/run.py &
 
 4. sudo reboot
+
+
+Pins
+
+Free gpio pins 7, 11, 13, 15.
+Reserve gpio pins 8, 10, 12, 23.
