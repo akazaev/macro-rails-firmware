@@ -109,8 +109,8 @@ def back():
         for pin in range(4):
             GPIO.output(PinsEnum.DRIVER[pin], SEQUENCE[POSITION][pin])
         sleep(0.003)
-        POSITION -= 1
-        ABS_POSITION -= 1
+        POSITION += -1 if ABS_POSITION > 0 else 1
+        ABS_POSITION += -1 if ABS_POSITION > 0 else 1
 
         if POSITION < 0:
             POSITION = len(SEQUENCE) - 1
