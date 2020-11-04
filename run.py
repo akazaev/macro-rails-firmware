@@ -29,6 +29,7 @@ GPIO.setup(PinsEnum.BACKWARD_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.INC_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.INC2_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.START_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(PinsEnum.STOP_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.DEC_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.DEC2_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
@@ -118,7 +119,7 @@ def run():
             lcd_print(run_template1.format(round(STEP, 3)),
                       run_template2.format(distance, SHOTS + 1))
 
-            if GPIO.input(PinsEnum.START_BTN):
+            if GPIO.input(PinsEnum.STOP_BTN):
                 lcd_print('Stop...', '')
                 sleep(4)
                 PROGRESS = False

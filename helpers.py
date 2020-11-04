@@ -9,12 +9,13 @@ class PinsEnum:
     SHOT = 21
     TEST_SHOT_BTN = 19
     FORWARD_BTN = 36
-    RESET_BTN = 32
+    RESET_BTN = 15
     BACKWARD_BTN = 38
     RESTART_BTN = 29
     INC_BTN = 22
     INC2_BTN = 16
     START_BTN = 24
+    STOP_BTN = 32
     DEC_BTN = 26
     DEC2_BTN = 18
 
