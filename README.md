@@ -14,7 +14,8 @@ Auto-run Script Setup
 4. sudo reboot
 
 
-Pins
+Pins remain.
 
 Free gpio pins 7, 11, 13, 15.
+
 Reserve gpio pins 8, 10, 12, 23.

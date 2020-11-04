@@ -27,8 +27,10 @@ GPIO.setup(PinsEnum.RESET_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.BACKWARD_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 GPIO.setup(PinsEnum.INC_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(PinsEnum.INC2_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.START_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(PinsEnum.DEC_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(PinsEnum.DEC2_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 for pin in PinsEnum.DRIVER:
     GPIO.setup(pin, GPIO.OUT)
@@ -148,10 +150,15 @@ GPIO.add_event_detect(PinsEnum.TEST_SHOT_BTN, GPIO.RISING,
 
 GPIO.add_event_detect(PinsEnum.INC_BTN, GPIO.RISING,
                       callback=step_callback, bouncetime=400)
-GPIO.add_event_detect(PinsEnum.START_BTN, GPIO.RISING,
-                      callback=start_callback, bouncetime=400)
+GPIO.add_event_detect(PinsEnum.INC2_BTN, GPIO.RISING,
+                      callback=step_callback, bouncetime=400)
 GPIO.add_event_detect(PinsEnum.DEC_BTN, GPIO.RISING,
                       callback=step_callback, bouncetime=400)
+GPIO.add_event_detect(PinsEnum.DEC2_BTN, GPIO.RISING,
+                      callback=step_callback, bouncetime=400)
+
+GPIO.add_event_detect(PinsEnum.START_BTN, GPIO.RISING,
+                      callback=start_callback, bouncetime=400)
 
 
 DIRECTION = 0
