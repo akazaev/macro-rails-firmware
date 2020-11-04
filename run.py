@@ -100,28 +100,28 @@ def back():
     global ABS_POSITION, POSITION, PROGRESS
 
     while True:
-        for pin in range(4):
-            GPIO.output(PinsEnum.DRIVER[pin], SEQUENCE[POSITION][pin])
-        sleep(0.003)
-        POSITION -= 1
-        ABS_POSITION -= 1
-
         if not ABS_POSITION:
             lcd_print('Home', '')
             sleep(2)
             PROGRESS = False
             break
 
-        if GPIO.input(PinsEnum.STOP_BTN):
-            lcd_print('Stop...', '')
-            sleep(2)
-            PROGRESS = False
-            break
+        for pin in range(4):
+            GPIO.output(PinsEnum.DRIVER[pin], SEQUENCE[POSITION][pin])
+        sleep(0.003)
+        POSITION -= 1
+        ABS_POSITION -= 1
 
         if POSITION < 0:
             POSITION = len(SEQUENCE) - 1
         if POSITION > len(SEQUENCE) - 1:
             POSITION = 0
+
+        if GPIO.input(PinsEnum.STOP_BTN):
+            lcd_print('Stop...', '')
+            sleep(2)
+            PROGRESS = False
+            break
 
 
 def run():
