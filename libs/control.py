@@ -1,11 +1,6 @@
-try:
-    import RPi.GPIO as GPIO
-except ImportError:
-    import OPi.GPIO as GPIO
-    GPIO.setboard(GPIO.ZERO)
-
-
 from time import sleep
+
+import RPi.GPIO as GPIO
 
 
 def take_shot(pin):

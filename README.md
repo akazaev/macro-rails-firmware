@@ -6,16 +6,14 @@ Auto-run Script Setup
 
 2. sudo nano /etc/profile
 3. Add:
-
-    sudo /home/pi/macro-stacking-utility/power.py
     
-    sudo /home/pi/macro-stacking-utility/run.py &
+    sudo /home/pi/macro-rails-firmware/run.py &
 
 4. sudo reboot
 
 
-Pins remain.
+Free pins remain on the board.
 
-Free gpio pins 7, 11.
+Free gpio pins: 7, 11.
 
-Reserve gpio pins 8, 10, 12, 23.
+Reserve gpio pins: 8, 10, 12, 23.
